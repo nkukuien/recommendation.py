@@ -7,17 +7,17 @@ from sklearn.metrics.pairwise import cosine_similarity
 tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
 model = BertModel.from_pretrained('bert-base-uncased')
 
-# Read movie data from the CSV file
-movies = []
-with open('/MOVIES2.csv', 'r') as file:
+# Read college data from the CSV file
+colleges = []
+with open('/content/Embedings.csv', 'r') as file:
     reader = csv.DictReader(file)
     for row in reader:
-        movies.append(row)
+        colleges.append(row)
 
 # Encode the descriptions and generate BERT embeddings
 embeddings = []
-for row in movies:
-    description = row['DESCRIPTION']
+for college in colleges:
+    description = college['Descriptions']
     # Tokenize the description
     tokens = tokenizer.encode(description, add_special_tokens=True)
     # Convert tokens to tensors
@@ -33,12 +33,12 @@ embeddings = torch.tensor(embeddings)
 # Compute cosine similarity matrix
 similarity_matrix = cosine_similarity(embeddings)
 
-# Now, suppose a user likes "Movie 1". We can recommend another movie based on cosine similarity.
-liked_movie = "The Shawshank Redemption"
-liked_movie_index = next(index for index, movie in enumerate(movies) if movie['TITLE'] == liked_movie)
+# Now, suppose a user likes "Arusha Technical College (ATC) - Arusha". We can recommend another college based on cosine similarity.
+liked_college = "Arusha Technical College (ATC) - Arusha"
+liked_college_index = next(index for index, college in enumerate(colleges) if college['colleges'] == liked_college)
 
-# Find the most similar movie
-similar_movie_index = similarity_matrix[liked_movie_index].argsort()[::-1][1]  # Exclude the liked movie itself
-recommended_movie = movies[similar_movie_index]
+# Find the most similar college
+similar_college_index = similarity_matrix[liked_college_index].argsort()[::-1][1]  # Exclude the liked college itself
+recommended_college = colleges[similar_college_index]
 
-print("Because you liked " + liked_movie + ", we recommend: " + recommended_movie['TITLE'])
+print("Because you liked " + liked_college + ", we recommend: " + recommended_college['colleges'
